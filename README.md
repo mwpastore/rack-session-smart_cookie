@@ -87,7 +87,7 @@ You can easily register additional custom types on the default coder's factory:
 
 ```ruby
 my_coder = Rack::Session::SmartCookie::MessagePack.new
-my_coder.factory.register_type(0x00, MyCustomType) # 0x60...0xFF are reserved
+my_coder.factory.register_type(0x00, MyCustomType) # 0x60..0xFF are reserved
 
 use Rack::Session::SmartCookie, :coder=>my_coder
 ```
