@@ -8,7 +8,6 @@ module Rack
     class SmartCookie
       BAD_DIGESTS = %w[MD2 MD4 MD5 SHA SHA1].freeze
       DEFAULT_DIGEST = 'SHA256'
-      DELIMITER = '.'
       SECRET_MIN_BYTESIZE = 16
 
       class Base64
@@ -101,16 +100,18 @@ module Rack
 
       def unpacked_cookie_data(request)
         request.fetch_header(RACK_SESSION_UNPACKED_COOKIE_DATA) do |k|
-          session_data = request.cookies[@key]
+          bin_session_data = nil
 
-          if @secrets.any? && session_data
-            digest, session_data = session_data.reverse.split(DELIMITER, 2)
-            digest.reverse! if digest
-            session_data = session_data.reverse! if session_data
-            bin_session_data = Base64.decode(session_data) if session_data
-            bin_session_data = nil unless digest_match?(bin_session_data, digest)
-          else
-            bin_session_data = nil
+          if (session_data = request.cookies[@key])
+            if @secrets.any?
+              if session_data =~ /\A([^.*]+)\.([^.*]+)\z/
+                session_data, digest = Regexp.last_match.captures
+                bin_session_data = Base64.decode(session_data)
+                bin_session_data = nil unless digest_match?(bin_session_data, digest)
+              end
+            else
+              bin_session_data = Base64.decode(session_data)
+            end
           end
 
           request.set_header(k, coder.decode(bin_session_data) || {})
@@ -123,7 +124,7 @@ module Rack
         session_data = Base64.encode(bin_session_data)
 
         if @secrets.any?
-          session_data << DELIMITER << generate_hmac(bin_session_data, @secrets.first)
+          session_data << '.' << generate_hmac(bin_session_data, @secrets.first)
         end
 
         session_data
