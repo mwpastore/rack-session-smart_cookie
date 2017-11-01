@@ -48,11 +48,6 @@ configurable. The serializer remains configurable as the `:coder`.
 The remaining differences are mostly just better defaults: MessagePack and
 SHA2.
 
-### Other Features
-
-* Calling `#destroy` on the session deletes the cookie (by sending a Set-Cookie
-  header that immediately expires it) instead of generating an empty session
-
 ## Installation
 
 Add this line to your application's Gemfile:

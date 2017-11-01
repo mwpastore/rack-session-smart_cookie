@@ -133,12 +133,6 @@ module Rack
       def generate_hmac(data, secret)
         Base64.encode(OpenSSL::HMAC.digest(@hmac.new, secret, data))
       end
-
-      def delete_session(req, session_id, options)
-        delete_cookie(@key, :domain=>options[:domain], :path=>options[:path])
-
-        nil
-      end
     end
   end
 end
