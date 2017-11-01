@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Mike Pastore']
   spec.email         = ['mike@oobak.org']
 
-  spec.summary       = %q{Slighty smarter session cookies for Rack apps}
+  spec.summary       = %q{Slightly smarter session cookies for Rack apps}
   spec.homepage      = 'https://github.com/mwpastore/rack-session-smart_cookie#readme'
   spec.license       = 'MIT'
 
