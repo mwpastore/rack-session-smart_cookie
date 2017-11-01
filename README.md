@@ -77,18 +77,22 @@ $ gem install rack-session-smart_cookie
 use Rack::Session::SmartCookie
 ```
 
-Rack::Session::SmartCookie accepts the same options as
-[Rack::Session::Cookie][6]. If you choose to override the default `:coder`, it
-should *not* perform the Base64 steps.
+Rack::Session::SmartCookie is a sub-class of [Rack::Session::Cookie][6] and
+accepts all the same options. If you choose to override the default `:coder`,
+it should *not* perform Base64 encoding or decoding.
 
-You can easily register additional custom types on the default coder's factory:
+The default `:coder` registers Symbol as a custom type on the factory. You can
+easily register additional custom types like so:
 
 ```ruby
-my_coder = Rack::Session::SmartCookie::MessagePack.new
-my_coder.factory.register_type(0x00, MyCustomType) # 0x60..0xFF are reserved
+my_coder = Rack::Session::SmartCookie::MessagePack.new do |factory|
+  factory.register_type(0x00, MyCustomType) # 0x60..0xFF are reserved
+end
 
 use Rack::Session::SmartCookie, :coder=>my_coder
 ```
+
+Please see the [MessagePack][3] documentation for more details.
 
 ## Comparisons
 

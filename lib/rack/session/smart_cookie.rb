@@ -55,10 +55,12 @@ module Rack
           # Create our own factory so we don't pollute the global namespace
           # with our custom type.
           @factory = ::MessagePack::Factory.new
-          # user gets 0x00...0x60
+
+          # MessagePack gets custom types 0x80..0xFF
           # we get 0x60...0x80
-          # MessagePack gets 0x80..0xFF
           @factory.register_type(0x60, Symbol)
+          # user gets 0x00...0x60
+          yield @factory if block_given?
         end
 
         def encode(data)
