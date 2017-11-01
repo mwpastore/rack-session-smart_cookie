@@ -1,6 +1,6 @@
 # Rack::Session::SmartCookie
 
-The version of Rack::Session::Cookie that ships with Rack has the following
+The version of Rack::Session::Cookie that ships with Rack 2 has the following
 limitations:
 
 * Insecure SHA1 (HMAC-SHA1) by default
@@ -14,7 +14,7 @@ limitations:
 
 Of course, none of these are true show-stoppers, and the worst can be worked
 around by passing e.g. `:hmac` and `:coder` to the initializer. But we are nice
-people, and we deserve nice things. This gem provides a minor derivative of
+people and we deserve nice things. This gem provides a minor derivative of
 Rack::Session::Cookie with the following improvements:
 
 * Secure SHA2 (HMAC-SHA-256) by default
