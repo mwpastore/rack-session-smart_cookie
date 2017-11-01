@@ -1,11 +1,14 @@
 # frozen_string_literal: true
+require 'rack/session/smart_cookie/version'
+
 require 'base64'
 require 'msgpack'
 require 'openssl'
+require 'rack/session/cookie'
 
 module Rack
   module Session
-    class SmartCookie
+    class SmartCookie < Cookie
       BAD_DIGESTS = %w[MD2 MD4 MD5 SHA SHA1].freeze
       DEFAULT_DIGEST = 'SHA256'
       SECRET_MIN_BYTESIZE = 16
