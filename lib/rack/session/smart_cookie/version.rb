@@ -10,7 +10,7 @@ module Rack
     Cookie = Class.new unless defined?(Cookie)
 
     class SmartCookie < Cookie
-      VERSION = '0.1.0'.freeze
+      VERSION = '0.1.1'.freeze
     end
   end
 end
