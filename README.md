@@ -43,10 +43,10 @@ serialized and stringified (in the case of the session payload) or merely
 stringified (in the case of the digest).
 
 The other key realization is that the method Rack uses to escape cookie data
-([URI.encode_www_form_component][5]) will only ever allow URL-safe Base64 plus
-period (`.`) and asterisk (`*`), so there's no sense in using any
-stringification scheme other than URL-safe Base64! It doesn't need to be
-configurable. The serializer remains configurable as the `:coder`.
+([URI.encode_www_form_component][5]) will only ever allow non-padded, URL-safe
+Base64 plus period (`.`) and asterisk (`*`), so there's no sense in using any
+stringification scheme other than non-padded, URL-safe Base64! It doesn't need
+to be configurable. The serializer remains configurable as the `:coder`.
 
 The remaining differences are mostly just better defaults: MessagePack and
 SHA2.
