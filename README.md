@@ -1,5 +1,8 @@
 # Rack::Session::SmartCookie
 
+[![Gem Version](https://badge.fury.io/rb/rack-session-smart_cookie.svg)](https://badge.fury.io/rb/rack-session-smart_cookie)
+[![Build Status](https://travis-ci.org/mwpastore/rack-session-smart_cookie.svg?branch=master)](https://travis-ci.org/mwpastore/rack-session-smart_cookie)
+
 The version of Rack::Session::Cookie that ships with Rack 2 has the following
 limitations:
 
