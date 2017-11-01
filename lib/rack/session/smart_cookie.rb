@@ -14,15 +14,37 @@ module Rack
       SECRET_MIN_BYTESIZE = 16
 
       class Base64
-        def self.encode(data)
-          ::Base64.urlsafe_encode64(data, :padding=>false)
-        end
+        if ::Base64.respond_to?(:urlsafe_encode64) && ::Base64.method(:urlsafe_encode64).arity.abs >= 2
+          def self.encode(data)
+            ::Base64.urlsafe_encode64(data, :padding=>false)
+          end
 
-        def self.decode(bin)
-          return unless bin
+          def self.decode(str)
+            return unless str
 
-          ::Base64.urlsafe_decode64(bin)
-        rescue
+            ::Base64.urlsafe_decode64(str)
+          rescue
+          end
+        else
+          def self.encode(data)
+            ::Base64.urlsafe_encode64(data).tap { |str| str.sub!(/=*\z/, '') }
+          end
+
+          def self.decode(str)
+            return unless str
+
+            num_pad_chars =
+              case str.bytesize % 4
+              when 0 then 0
+              when 2 then 2
+              when 3 then 1
+              else
+                fail 'Invalid Base64-encoded string!'
+              end
+
+            ::Base64.urlsafe_decode64(str + '=' * num_pad_chars)
+          rescue
+          end
         end
       end
 

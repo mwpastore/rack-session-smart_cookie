@@ -100,7 +100,7 @@ class DefaultBehaviorTest < Minitest::Test
     session_data = Base64.urlsafe_encode64(MessagePack.pack(
       'session_id'=>'12345',
       :foo=>'bar'
-    ))
+    )).sub(/=*$/, '')
     header 'Cookie', "rack.session=#{session_data}"
     capture { get '/has-cookie' }
     assert last_response.ok?
@@ -110,7 +110,7 @@ class DefaultBehaviorTest < Minitest::Test
   def test_malformed_cookie
     session_data = Base64.urlsafe_encode64(MessagePack.pack(
       'session_id'=>12345
-    ))
+    )).sub(/=*$/, '')
     header 'Cookie', "rack.session=#{session_data}"
     error = assert_raises { capture { get '/has-cookie' } }
     assert_includes error.message, 'undefined method'
@@ -175,8 +175,8 @@ class ShortKeyTest < Minitest::Test
     session_data = Base64.urlsafe_encode64(MessagePack.pack(
       'session_id'=>'12345',
       :foo=>'bar'
-    ))
-    session_data << '.' << Base64.urlsafe_encode64(SecureRandom.random_bytes(32))
+    )).sub(/=*$/, '')
+    session_data << '.' << Base64.urlsafe_encode64(SecureRandom.random_bytes(32)).sub(/=*$/, '')
     header 'Cookie', "rack.session=#{session_data}"
     capture { get '/has-cookie' }
     assert last_response.ok?
