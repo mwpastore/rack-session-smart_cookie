@@ -33,16 +33,7 @@ module Rack
           def self.decode(str)
             return unless str
 
-            num_pad_chars =
-              case str.bytesize % 4
-              when 0 then 0
-              when 2 then 2
-              when 3 then 1
-              else
-                fail 'Invalid Base64-encoded string!'
-              end
-
-            ::Base64.urlsafe_decode64(str + '=' * num_pad_chars)
+            ::Base64.urlsafe_decode64(str + '=' * (-str.bytesize % 4))
           rescue
           end
         end
