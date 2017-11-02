@@ -3,7 +3,7 @@ require 'rack/session/smart_cookie/version'
 
 require 'base64'
 require 'msgpack'
-require 'openssl'
+require 'openssl/digest'
 require 'rack/session/cookie'
 
 module Rack
@@ -70,7 +70,7 @@ module Rack
 
       def initialize(app, options={})
         options[:coder] ||= MessagePack.new
-        options[:hmac] = OpenSSL::Digest.const_get(DEFAULT_DIGEST) unless options.key?(:hmac)
+        options[:hmac] = OpenSSL::Digest(DEFAULT_DIGEST) unless options.key?(:hmac)
 
         super
 
