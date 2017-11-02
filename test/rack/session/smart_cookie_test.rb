@@ -122,7 +122,7 @@ class BadDigestTest < Minitest::Test
   include Rack::Test::Methods
 
   def app
-    super :hmac=>OpenSSL::Digest::SHA1, :secret=>SecureRandom.hex(32)
+    super :hmac=>OpenSSL::Digest::SHA, :secret=>SecureRandom.hex(32)
   end
 
   def test_cookie_response

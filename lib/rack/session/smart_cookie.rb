@@ -9,7 +9,7 @@ require 'rack/session/cookie'
 module Rack
   module Session
     class SmartCookie < Cookie
-      BAD_DIGESTS = %w[MD2 MD4 MD5 SHA SHA1].freeze
+      BAD_DIGESTS = %w[MD2 MD4 MD5 SHA].freeze
       DEFAULT_DIGEST = 'SHA256'
       SECRET_MIN_BYTESIZE = 16
 
@@ -82,10 +82,10 @@ module Rack
         digest algorithm (#{hmac.class}).
 
         Such algorithms are generally considered to be effectively broken. It
-        is strongly recommended that you elect to use a message digest algorithm
-        from the SHA2 family: SHA224, SHA256, SHA384, or SHA512, or one of the
-        derivatives such as SHA512/256. This will help prevent exploits that
-        may be possible from crafted cookies.
+        is strongly recommended that you elect to use a message digest
+        algorithm from the SHA2 family: SHA224, SHA256, SHA384, or SHA512, or
+        one of the derivatives such as SHA512/256. This will help prevent
+        exploits that may be possible from crafted cookies.
 
         Called from: #{caller[0]}.
           MSG

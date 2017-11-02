@@ -6,7 +6,7 @@
 The version of Rack::Session::Cookie that ships with Rack 2 has the following
 limitations:
 
-* Insecure SHA1 (HMAC-SHA1) by default
+* HMAC-SHA1 by default
 * Slow and/or bloated JSON, ZipJSON, or Marshal encoding out of the box
 * JSON encodings do not preserve Symbols
 * Digest is double-encoded and bloated (hexdigest of a base64)
@@ -20,7 +20,7 @@ around by passing e.g. `:hmac` and `:coder` to the initializer. But we are nice
 people and we deserve nice things. This gem provides a minor derivative of
 Rack::Session::Cookie with the following improvements:
 
-* Secure SHA2 (HMAC-SHA-256) by default
+* HMAC-SHA256 by default
 * Compact binary serialization format (currently [MessagePack][3] but will
   likely change to [CBOR][4] in the future) out of the box
 * Symbols are preserved with the default `:coder`
@@ -49,7 +49,7 @@ stringification scheme other than non-padded, URL-safe Base64! It doesn't need
 to be configurable. The serializer remains configurable as the `:coder`.
 
 The remaining differences are mostly just better defaults: MessagePack and
-SHA2.
+HMAC-SHA256.
 
 ## Installation
 
@@ -103,8 +103,8 @@ and add ZipJSON. Although it comes in second-most compact at 289 bytes (cf.
 protocol buffers and MessagePack at 204 and 373 bytes, respectively), it was
 97% slower to encode and 91% slower to decode cf. MessagePack.
 
-I put this mock session payload through the following configurations with SHA2
-and 128 sidbits and here are the results:
+I put this mock session payload through the following configurations with
+HMAC-SHA256 and 128 sidbits and here are the results:
 
 ```ruby
 {
