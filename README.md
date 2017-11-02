@@ -12,8 +12,8 @@ limitations:
 * Digest is double-encoded and bloated (hexdigest of a base64)
 * Base64-encoded strings contain unecessary padding and characters that need to
   be escaped (e.g. `/` becomes `%2F`), wasting precious cookie bytes
-* It has some bugs in the size check that may lead to truncated cookies, token
-  leakage, and/or cross-site request forgery
+* It has some bugs in the size check that may lead to dropped or truncated
+  cookies, token leakage, and/or cross-site request forgery
 
 Of course, none of these are true show-stoppers, and the worst can be worked
 around by passing e.g. `:hmac` and `:coder` to the initializer. But we are nice
