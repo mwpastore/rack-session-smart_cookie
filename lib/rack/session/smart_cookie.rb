@@ -70,12 +70,14 @@ module Rack
 
       def initialize(app, options={})
         options[:coder] ||= MessagePack.new
-        options[:hmac] = OpenSSL::Digest(DEFAULT_DIGEST) unless options.key?(:hmac)
+        unless options.key?(:hmac)
+          options[:hmac] = OpenSSL::Digest(options.fetch(:digest, DEFAULT_DIGEST))
+        end
 
         super
 
         if @secrets.any?
-          hmac = options[:hmac].new
+          hmac = options[:hmac].new # throwaway object for inspection purposes
 
           warn <<-MSG if BAD_DIGESTS.include?(hmac.name)
         SECURITY WARNING: You have elected to use an old and insecure message
@@ -90,7 +92,7 @@ module Rack
         Called from: #{caller[0]}.
           MSG
 
-          unless (SECRET_MIN_BYTESIZE..hmac.block_length).cover?(@secrets.first.bytesize)
+          unless (SECRET_MIN_BYTESIZE .. hmac.block_length).cover?(@secrets.first.bytesize)
             show_caveat = hmac.digest_length > SECRET_MIN_BYTESIZE
 
             message = String.new(<<-MSG)
@@ -112,6 +114,8 @@ module Rack
             warn message
           end
         end
+
+        @digest_bytes = options[:digest_bytes]
       end
 
       private
@@ -149,7 +153,8 @@ module Rack
       end
 
       def generate_hmac(data, secret)
-        Base64.encode(OpenSSL::HMAC.digest(@hmac.new, secret, data))
+        digest = OpenSSL::HMAC.digest(@hmac.new, secret, data)
+        Base64.encode(@digest_bytes ? digest.byteslice(0, @digest_bytes) : digest)
       end
     end
   end

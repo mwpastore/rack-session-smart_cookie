@@ -1,5 +1,6 @@
 require_relative '../../test_helper'
 
+require 'base64'
 require 'hobby'
 require 'rack/test'
 require 'securerandom'
@@ -206,5 +207,44 @@ class LongKeyTest < Minitest::Test
     assert last_response.ok?
     assert_match %r{^rack.session=[\w-]+\.[\w-]+;}, last_response.headers['Set-Cookie']
     refute_includes stderr, 'SECURITY WARNING'
+  end
+end
+
+module DigestOptionsTest
+  include MyAppTest
+  include Rack::Test::Methods
+
+  def app
+    super :secret=>SecureRandom.hex(32), :digest=>@digest, :digest_bytes=>@digest_bytes
+  end
+
+  def test_cookie_response
+    get '/set-cookie'
+
+    assert last_response.ok?
+    b64digest = last_response.headers['Set-Cookie'][%r{^rack.session=[\w-]+\.([\w-]+);}, 1]
+    assert_equal @digest_bytes, Base64.urlsafe_decode64(b64digest).bytesize
+  end
+end
+
+class FooTest < Minitest::Test
+  include DigestOptionsTest
+
+  def initialize(*)
+    super
+
+    @digest = 'SHA512'
+    @digest_bytes = 64
+  end
+end
+
+class BarTest < Minitest::Test
+  include DigestOptionsTest
+
+  def initialize(*)
+    super
+
+    @digest = 'SHA512'
+    @digest_bytes = 32
   end
 end

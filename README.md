@@ -94,6 +94,17 @@ use Rack::Session::SmartCookie, :coder=>my_coder
 
 Please see the [MessagePack][3] documentation for more details.
 
+Rack::Session::SmartCookie also accepts `:digest` and `:digest_bytes` options
+that allow you to choose the message digest algorithm and limit the size of the
+generated digest. This lets you e.g. truncate 64-byte HMAC-SHA512 digests down
+to 32 bytes (i.e. HMAC-SHA512/256):
+
+```
+use Rack::Session::SmartCookie, :digest=>'SHA512', :digest_bytes=>32
+```
+
+The `:hmac` option overrides the `:digest` option.
+
 ## Comparisons
 
 For general size and performance benchmarks of the encoding schemes, see
