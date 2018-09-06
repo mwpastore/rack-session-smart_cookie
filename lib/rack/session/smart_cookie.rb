@@ -55,15 +55,13 @@ module Rack
         end
 
         def encode(data)
-          # https://github.com/msgpack/msgpack-ruby/issues/141
-          factory.packer.write(data).to_str
+          factory.pack(data)
         end
 
         def decode(bin)
           return unless bin
 
-          # https://github.com/msgpack/msgpack-ruby/issues/141
-          factory.unpacker.feed(bin).read
+          factory.unpack(bin)
         rescue
         end
       end
